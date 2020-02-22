@@ -8,7 +8,7 @@ const Users = require('./auth-model');
 // Generate Token
 function generateToken(user) {
   return jwt.sign({
-    userId: user.id,
+    userId: user.id
   }, secrets.jwtSecret, {
     expiresIn: '1h',
   })
@@ -16,17 +16,14 @@ function generateToken(user) {
 
 // POST - /api/auth/register
 router.post('/register', (req, res) => {
-  let user = req.body;
-  let hash = bcrypt.hashSync(user.password, 10);
-  user.password = hash;
+  let {username, password} = req.body;
+  let hash = bcrypt.hashSync(password, 10);
 
-  Users.add(user)
+  Users.add({ username, password: hash })
     .then(saved => {
-      const token = generateToken(saved);
 
       res.status(201).json({
-        message: `Welcome ${saved.username}!`,
-        authToken: token,
+        message: `Welcome ${saved.username}!`
       });
     })
     .catch(err => {
@@ -55,6 +52,7 @@ router.post('/login', (req, res) => {
       }
     })
     .catch(err => {
+      console.log(err);
       res.status(500).json(err);
     })
 });
