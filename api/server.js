@@ -15,4 +15,11 @@ server.use(express.json());
 server.use('/api/auth', authRouter);
 server.use('/api/jokes', authenticate, jokesRouter);
 
+// For testing purposes
+server.get('/', (req, res) => {
+  res.status(200).json({
+    message: "Welcome"
+  })
+})
+
 module.exports = server;
